@@ -48,8 +48,7 @@ Core analysis code lives in a small, purpose‑built library, **`mplniw`**, whil
 │   ├── 40_three_mooring_beta_method.ipynb
 │   └── 50_validation_vs_truth.ipynb
 │
-├── environment.yml       # Conda environment (preferred) with pinned versions
-├── requirements.txt      # Same packages in pip format
+| 
 └── README.md             # You are here
 
 
@@ -63,8 +62,9 @@ git clone https://github.com/zcasparco/NISKINe.git
 ```
 
 Data
-
-Mooring observations (netCDF) are stored externally to keep the repository lightweight. Data are not yet available to download.
+================
+Mooring observations (netCDF) are stored externally to keep the repository lightweight.
+ Data are not yet available to download.
 
 
 
