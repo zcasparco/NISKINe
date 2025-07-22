@@ -314,4 +314,35 @@ def get_tidal_frequencies(*args, units="cpd"):
         # cps
         scale = 1 / 2 / np.pi
     return {c: td.wave(c).freq * scale for c in args}
-        
+
+
+# ------------------------------ Barycentric coordinates  ---------------------------------------
+
+def vec(p1, p2):
+        return (p2[0] - p1[0], p2[1] - p1[1])
+
+
+def point_in_triangle(x,y,triangle):
+    (x1, y1), (x2, y2), (x3, y3) = triangle
+    v0 = vec((x1, y1), (x3, y3))
+    v1 = vec((x1, y1), (x1, y2))
+    v2 = vec((x1, y1),(x,y))
+    d00 = np.dot(v0,v0)
+    d01 = np.dot(v0,v1)
+    d11 = np.dot(v1,v1)
+    d20 = np.dot(v2,v0)
+    d21 = np.dot(v2,v1)
+    denom = d00 * d11 - d01 * d01;
+    v = (d11 * d20 - d01 * d21) / denom;
+    w = (d00 * d21 - d01 * d20) / denom;
+    u = 1 - v - w;
+    return u,v,w
+
+def barycentric_coords(X,Y,triangle):
+    #(lat1, lon1), (lat2, lon2), (lat3, lon3) = latlon
+    _u = [[point_in_triangle(x,y,triangle)[0] for x in X] for y in Y]
+    _v = [[point_in_triangle(x,y,triangle)[1] for x in X] for y in Y]
+    _w = [[point_in_triangle(x,y,triangle)[2] for x in X] for y in Y]
+    ds_out = xr.Dataset({'u':(['lon','lat'],np.array(_u).T),'v':(['lon','lat'],np.array(_v).T),'w':(['lon','lat'],np.array(_w).T)},
+                        coords={'lon':(['lon'],np.array(X.lon)),'lat':(['lat'],np.array(Y.lat))})
+    return ds_out
